@@ -1,0 +1,9 @@
+[project]
+name = "local-crypto-paper-trader"
+version = "0.1.0"
+description = "Local simulated-only crypto paper trader using Coinbase public candles and Laya"
+requires-python = ">=3.10"
+dependencies = []
+
+[tool.unittest]
+start-directory = "tests"

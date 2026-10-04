@@ -1,0 +1,14 @@
+{
+  "state_key": "request",
+  "questions": {
+    "action": {
+      "type": "choice",
+      "instructions": "Using only the market facts and the virtual position in `request`, choose a cautious simulated action. BUY only when short-term trend and recent momentum are positive without an overheated RSI. SELL only when the virtual account owns the asset and trend/momentum is weakening. Otherwise choose HOLD. This is only a paper-trading signal, not investment advice.",
+      "criteria": {
+        "BUY": "Positive short-term trend and momentum, with RSI not overheated; consider a small simulated buy.",
+        "SELL": "A virtual position exists and market trend or momentum is weakening; consider a simulated exit.",
+        "HOLD": "Mixed, weak, or unclear evidence, no suitable action, or no virtual position to sell."
+      }
+    }
+  }
+}
