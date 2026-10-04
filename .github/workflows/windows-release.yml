@@ -34,11 +34,10 @@ jobs:
 
       - name: Build Windows x64 executable
         shell: pwsh
-        run: >-
-          python -m PyInstaller --noconfirm --clean --onefile --console
-          --name CryptoPaperTrader --add-data "questions.json;."
-          --distpath dist --workpath build/pyinstaller --specpath build
-          windows_entry.py
+        run: |
+          $questionData = (Resolve-Path .\questions.json).Path
+          python -m PyInstaller --noconfirm --clean --onefile --console --name CryptoPaperTrader --add-data "$questionData;." --distpath dist --workpath build/pyinstaller --specpath build windows_entry.py
+          if ($LASTEXITCODE -ne 0) { throw "PyInstaller failed to build the Windows executable." }
 
       - name: Smoke-test executable CLI
         shell: pwsh
