@@ -22,7 +22,11 @@ from .paper import (
 )
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_STATE = PROJECT_ROOT / "data" / "portfolio.json"
+if getattr(sys, "frozen", False):
+    _local_app_data = Path(os.environ.get("LOCALAPPDATA", Path.home() / "AppData" / "Local"))
+    DEFAULT_STATE = _local_app_data / "CryptoPaperTrader" / "portfolio.json"
+else:
+    DEFAULT_STATE = PROJECT_ROOT / "data" / "portfolio.json"
 
 
 def _symbols(value: str) -> list[str]:

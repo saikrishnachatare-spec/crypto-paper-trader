@@ -1,0 +1,80 @@
+name: Windows x64 release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: windows-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-windows-x64:
+    runs-on: windows-2025
+    timeout-minutes: 30
+    steps:
+      - name: Check out tagged source
+        uses: actions/checkout@v7
+
+      - name: Set up Python 3.12 x64
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          architecture: "x64"
+
+      - name: Install pinned executable packager
+        run: python -m pip install --upgrade pip pyinstaller==6.17.0
+
+      - name: Run unit tests
+        run: python -m unittest discover -s tests -v
+
+      - name: Build Windows x64 executable
+        shell: pwsh
+        run: >-
+          python -m PyInstaller --noconfirm --clean --onefile --console
+          --name CryptoPaperTrader --add-data "questions.json;."
+          --distpath dist --workpath build/pyinstaller --specpath build
+          windows_entry.py
+
+      - name: Smoke-test executable CLI
+        shell: pwsh
+        run: |
+          $output = & .\dist\CryptoPaperTrader.exe --help 2>&1 | Out-String
+          if ($LASTEXITCODE -ne 0) { throw "Executable --help failed: $output" }
+          if ($output -notmatch "--dry-run" -or $output -notmatch "--loop") {
+            throw "Executable help is missing expected trader options: $output"
+          }
+          Write-Output $output
+
+      - name: Assemble portable distribution and checksums
+        shell: pwsh
+        run: |
+          $bundle = Join-Path $env:RUNNER_TEMP "CryptoPaperTrader-Windows-x64"
+          New-Item -ItemType Directory -Force -Path $bundle | Out-Null
+          New-Item -ItemType Directory -Force -Path (Join-Path $bundle "licenses") | Out-Null
+          Copy-Item dist\CryptoPaperTrader.exe, setup-windows.ps1, README-Windows.md, requirements-laya.txt -Destination $bundle
+          Copy-Item packaging\licenses\* -Destination (Join-Path $bundle "licenses")
+          Compress-Archive -Path (Join-Path $bundle "*") -DestinationPath dist\CryptoPaperTrader-Windows-x64.zip -CompressionLevel Optimal
+          $lines = @()
+          foreach ($file in @("dist\CryptoPaperTrader.exe", "dist\CryptoPaperTrader-Windows-x64.zip")) {
+            $hash = (Get-FileHash $file -Algorithm SHA256).Hash.ToLowerInvariant()
+            $lines += "$hash  $(Split-Path $file -Leaf)"
+          }
+          $lines | Set-Content -Encoding ascii dist\SHA256SUMS.txt
+
+      - name: Publish executable and setup bundle to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Crypto Paper Trader ${{ github.ref_name }}
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+          files: |
+            dist/CryptoPaperTrader.exe
+            dist/CryptoPaperTrader-Windows-x64.zip
+            dist/SHA256SUMS.txt
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

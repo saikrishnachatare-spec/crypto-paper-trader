@@ -24,6 +24,10 @@ python3 -m paper_trader --loop --interval 300
 
 The first Laya inference may need internet access to download its model. Set `LAYA_CLI=/path/to/laya` to use another executable. The `--state` option changes the virtual portfolio path. Useful options include `--symbols BTC-USD,ETH-USD`, `--initial-cash 10000`, `--trade-fraction 0.05`, `--max-position-fraction 0.20`, `--fee-bps 10`, and `--slippage-bps 5`.
 
+## Windows x64 release
+
+Download the latest `CryptoPaperTrader-Windows-x64.zip` from [GitHub Releases](https://github.com/saikrishnachatare-spec/crypto-paper-trader/releases). Extract it, install the pinned CPU-only Laya runtime with `setup-windows.ps1` as described in the included `README-Windows.md`, then run `CryptoPaperTrader.exe`. The first model inference downloads Laya's checkpoint; the executable otherwise uses only public Coinbase candle data and simulated local fills. No exchange credentials or real orders are used.
+
 ## GitHub Actions schedule
 
 `.github/workflows/paper-trader.yml` runs one paper-trading cycle on a five-minute Actions schedule (`*/5 * * * *`) using the standard GitHub-hosted `ubuntu-24.04` runner. It installs the pinned Laya CLI and CPU-only PyTorch runtime, caches pip downloads and the Hugging Face/PyTorch model directories where practical, runs the unit tests, and commits an updated portfolio only after a successful non-dry-run cycle. No repository secrets or exchange credentials are needed. Runs are serialized to prevent overlapping state updates.

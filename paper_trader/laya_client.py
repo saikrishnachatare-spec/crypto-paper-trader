@@ -12,7 +12,8 @@ from typing import Mapping
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_LAYA = "/home/ubuntu/.local/share/laya/.venv/bin/laya"
-QUESTIONS_FILE = PROJECT_ROOT / "questions.json"
+RESOURCE_ROOT = Path(getattr(sys, "_MEIPASS", PROJECT_ROOT))
+QUESTIONS_FILE = RESOURCE_ROOT / "questions.json"
 
 
 @dataclass(frozen=True)
@@ -23,7 +24,14 @@ class ModelDecision:
 
 class LayaClient:
     def __init__(self, executable: str | None = None, timeout: float = 180.0):
-        configured = executable or os.environ.get("LAYA_CLI") or DEFAULT_LAYA
+        configured = executable or os.environ.get("LAYA_CLI")
+        if not configured and getattr(sys, "frozen", False):
+            bundled_environment = Path(sys.executable).resolve().parent / ".venv" / "Scripts" / "laya.exe"
+            configured = str(bundled_environment) if bundled_environment.is_file() else "laya"
+        elif not configured and sys.platform == "win32":
+            configured = "laya"
+        elif not configured:
+            configured = DEFAULT_LAYA
         self.executable = shutil.which(configured) or configured
         self.timeout = timeout
         self._warned_uncalibrated = False
