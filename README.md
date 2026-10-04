@@ -26,7 +26,7 @@ The first Laya inference may need internet access to download its model. Set `LA
 
 ## GitHub Actions schedule
 
-`.github/workflows/paper-trader.yml` runs one paper-trading cycle on a five-minute Actions schedule (`*/5 * * * *`) using the standard `ubuntu-latest` hosted runner. It installs the pinned Laya CLI and CPU-only PyTorch runtime, caches pip downloads and the Hugging Face/PyTorch model directories where practical, runs the unit tests, and commits an updated portfolio only after a successful non-dry-run cycle. No repository secrets or exchange credentials are needed. Runs are serialized to prevent overlapping state updates.
+`.github/workflows/paper-trader.yml` runs one paper-trading cycle on a five-minute Actions schedule (`*/5 * * * *`) using the standard GitHub-hosted `ubuntu-24.04` runner. It installs the pinned Laya CLI and CPU-only PyTorch runtime, caches pip downloads and the Hugging Face/PyTorch model directories where practical, runs the unit tests, and commits an updated portfolio only after a successful non-dry-run cycle. No repository secrets or exchange credentials are needed. Runs are serialized to prevent overlapping state updates.
 
 To safely test the hosted setup, open **Actions → Laya paper trader → Run workflow** and leave **dry_run** checked (the default). This fetches public candles and runs Laya, but does not simulate fills or write portfolio state. Scheduled runs use paper mode. A manual run with dry-run unchecked also performs a simulated paper cycle and may update the public portfolio.
 
