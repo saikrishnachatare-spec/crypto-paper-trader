@@ -1,22 +1,17 @@
 {
-  "cash": 9499.5,
+  "cash": 9967.620851495592,
   "created_at": "2026-10-04T13:50:37.552428+00:00",
   "initial_cash": 10000.0,
   "last_prices": {
-    "BTC-USD": 84064.16,
-    "ETH-USD": 2615.96
+    "BTC-USD": 83309.48,
+    "ETH-USD": 2563.91
   },
   "last_processed_candles": {
-    "BTC-USD": 1791361800,
-    "ETH-USD": 1791361800
+    "BTC-USD": 1791387600,
+    "ETH-USD": 1791387600
   },
-  "positions": {
-    "ETH-USD": {
-      "average_entry_price": 2737.14092652,
-      "quantity": 0.18285503502968534
-    }
-  },
-  "realized_pnl": 0.0,
+  "positions": {},
+  "realized_pnl": -32.37914850440745,
   "trades": [
     {
       "candle_timestamp": 1791166500,
@@ -28,6 +23,17 @@
       "simulated_fill_price": 2734.40652,
       "symbol": "ETH-USD",
       "time": "2026-10-05T02:24:17.277371+00:00"
+    },
+    {
+      "candle_timestamp": 1791387600,
+      "cash_delta": 468.12085149559255,
+      "fee": 0.46858944093652904,
+      "market_price": 2563.91,
+      "quantity": 0.18285503502968534,
+      "side": "SELL",
+      "simulated_fill_price": 2562.628045,
+      "symbol": "ETH-USD",
+      "time": "2026-10-07T15:47:05.205171+00:00"
     }
   ],
   "version": 1
