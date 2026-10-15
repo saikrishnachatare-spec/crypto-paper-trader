@@ -3,12 +3,12 @@
   "created_at": "2026-10-04T13:50:37.552428+00:00",
   "initial_cash": 10000.0,
   "last_prices": {
-    "BTC-USD": 80903.66,
-    "ETH-USD": 2362.36
+    "BTC-USD": 82037.88,
+    "ETH-USD": 2429.55
   },
   "last_processed_candles": {
-    "BTC-USD": 1792065300,
-    "ETH-USD": 1792065300
+    "BTC-USD": 1792082400,
+    "ETH-USD": 1792082400
   },
   "positions": {
     "BTC-USD": {
